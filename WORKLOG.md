@@ -125,3 +125,10 @@ harmless refactor, and the behavioural tests (same call, fees in one situation, 
 the other) already make the point. Replaced the "one pass is enough" comment with a checked
 assertion: after reconciling, a second read-only pass must find nothing to do, so the
 acyclicity claim in AMBIGUITIES item 2 fails loudly if it ever stops holding.
+
+**2026-09-01 20:20 +0300 — Commit 10: interest accrual and capitalisation.** Verified figures reproduce: ACC-001
+accrues 0.10 / 0.10 / 0.26 / 0.19 / 0.19 / 0.19 for a capitalised 1.03 against an exact
+1.018, and ACC-002 accrues 0.004 on Days 5 and 6 for 0.008 with no divergence at all.
+Chose to keep zero-accrual days in the accrual list rather than filtering them, so the
+report can show Days 1–4 of ACC-002 accruing nothing on a zero balance — an absent line and
+a zero line are different statements.
