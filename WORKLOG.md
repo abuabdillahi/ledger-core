@@ -67,3 +67,11 @@ set grew.
 full before any code exists, which is the honest sequence — the analysis genuinely preceded
 the implementation and the history should say so. Repository initialised, Python 3.11.13
 virtualenv created with pytest as the sole (development-only) dependency.
+
+**2026-09-01 19:56 +0300 — Commit 2: money and the currency registry.** Money is an integer count of minor
+units with the currency attached; `float` is refused at construction, at the major-unit
+constructor and at the rounding entry point, so "no floating point" is enforced by the type
+rather than by grep. Rounding lives in this module alone and takes an explicit named mode.
+Added a half-up mode alongside half-even purely so that the AMBIGUITIES item 17 claim — that
+the mode does not change the output on this dataset — is a passing test rather than a
+sentence.
