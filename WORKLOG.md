@@ -87,3 +87,9 @@ Decided that `Reversal` should carry no amount and instead reverse whatever its 
 event actually posted, read back from the journal: a reversal then cannot disagree with the
 thing it reverses, and multi-entry originals (E10-shaped) reverse correctly without special
 handling.
+
+**2026-09-01 19:58 +0300 — Commit 5: journal and decision log.** Settled the "where does a rejection live"
+question: `auth.py` will own the decision *logic*, the journal owns the *record*, and both
+logs draw on one sequence counter so a decision's position relative to surrounding postings
+is unambiguous. Noted in the module docstring that production would normally split these
+into an upstream event store and a downstream postings-only ledger.
