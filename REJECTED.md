@@ -195,7 +195,35 @@ was not taken.
 
 ## Approaches abandoned mid-build
 
-Recorded here as they happened, not reconstructed afterwards.
+Recorded as they happened rather than reconstructed afterwards.
 
-*(This section is appended to during implementation. If it ends up empty, that is stated
-plainly along with the reason, rather than being padded.)*
+**No architectural approach was abandoned.** The first design — journal as sole state, every
+other value a pure projection, fee assessment as a reconciler over desired-versus-actual —
+held from the hand calculation through to the final commit without needing to be reworked.
+
+That is worth explaining rather than merely claiming, because "the first design held" is
+also what someone says when they did not look hard enough. The design held because the two
+hard parts of this brief turn out to be the same problem. The back-value cascade and the fee
+unwind both ask "what happens to things already computed when new information arrives about
+a day that has closed", and *storing nothing* answers both at once: there is no computed
+thing to update, so there is nothing to keep in step. Had balances been stored, E7 would
+have needed forward-propagation code and E9 would have needed an unwind path, and the two
+would have been separate mechanisms with separate bugs.
+
+Three smaller things were tried and dropped:
+
+- **A structural test asserting the reconciler had exactly one code path**, by inspecting
+  its source for two `journal.append` calls. It passed, and it would have broken on any
+  harmless refactor while proving nothing a behavioural test does not. Deleted in the same
+  commit that introduced it. The claim is now made by the behavioural tests: the same call
+  appends fees in one situation and reversals in another.
+- **The `journal` parameter on the day-advance hook**, which the brief's sketch shows.
+  Everything that hook does — releasing holds whose authorisation has expired — moves no
+  money and appends no ledger entry, so the parameter would have been present only in case
+  it was needed later, which is a claim the code does not support. Dropped, with a docstring
+  note that the signature should change deliberately if that ever stops being true.
+- **Two weak assertions**, one in the back-value test and one in the scenario test, that
+  were passing while asserting almost nothing. Both were replaced with the claim they were
+  meant to make. Recorded because a test that passes for the wrong reason is worse than no
+  test, and finding two of them in one's own work is the normal case rather than a
+  confession.

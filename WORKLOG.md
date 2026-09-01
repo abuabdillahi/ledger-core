@@ -165,3 +165,14 @@ reconciler calling an O(n) balance projection once per day per account after eve
 event, which is quadratic in stream length, and it bites long before memory does. Wrote the
 snapshot proposal with its value-date invalidation rule, since a snapshot that is stale and
 does not know it turns an expensive correct answer into a fast wrong one.
+
+**2026-09-01 20:28 +0300 — Commit 15: final documentation pass.** README given run instructions, an output
+guide keyed to the five report sections, the Python 3.11 justification and the explicit
+statement that pytest is a development dependency only and is imported by nothing under
+`ledger/`. Filled in REJECTED.md's abandoned-approaches section: no architectural approach
+was abandoned, and rather than leave that as a bare claim, wrote down *why* the first design
+held — the back-value cascade and the fee unwind are the same problem, and storing nothing
+answers both at once. Three smaller things were tried and dropped and are listed. Ran the
+verification checklist: no `float` anywhere outside the guards that reject it, no
+assignment to any entry field outside the two tests asserting that it raises, no delete or
+mutate path in the package, BHD at three decimal places throughout.
