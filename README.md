@@ -43,7 +43,7 @@ Optionally, to check the exhaustive-dispatch claim below:
 .venv/bin/pip install mypy && .venv/bin/python -m mypy ledger/
 ```
 
-The suite should report **87 passed, 1 xfailed**. The expected failure is deliberate and is
+The suite should report **90 passed, 1 xfailed**. The expected failure is deliberate and is
 the subject of `tests/test_known_failure.py`; it is marked strict, so it will also be
 reported if it ever starts passing.
 
@@ -52,8 +52,11 @@ reported if it ever starts passing.
 `python -m ledger.report` replays all ten events and prints five sections.
 
 **DAY BY DAY** — for each day, each account's closing balance, the entries *booked* that
-day, the fees *value-dated* to that day, authorisation transitions and any decisions
-recorded. Booking day and value date differ for several entries, which is why they are shown
+day, the fees *value-dated* to that day, the state and hold of every authorisation the
+ledger has heard of by then, and any decisions recorded. Authorisation state is shown on
+every day, not only on the days it changes — a 200.00 hold suppressing available balance
+through a quiet Day 3 is exactly what a per-day report exists to make visible — with the
+transition that caused it listed underneath on the day it happened. Booking day and value date differ for several entries, which is why they are shown
 separately: Day 5 lists E7 as booked, while E7's 620.00 appears in Day 2's balance.
 
 Where the two balance bases disagree, both are printed. On Day 5, ACC-001 reads

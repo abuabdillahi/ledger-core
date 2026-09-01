@@ -129,6 +129,24 @@ class AuthorizationLog:
         history = self.history(auth_ref)
         return history[-1].state if history else None
 
+    def state_on(self, auth_ref: str, day: int) -> AuthState | None:
+        """State as at end of ``day``, by folding the history up to that day.
+
+        Distinct from :meth:`state_of`, which folds the whole history. Auth-A is
+        APPROVED on Day 3 and SETTLED on Day 4, and a report that only ever
+        shows the final state cannot say what was true on Day 3.
+        """
+        applicable = [t for t in self.history(auth_ref) if t.day <= day]
+        return applicable[-1].state if applicable else None
+
+    def known_on(self, day: int) -> tuple[str, ...]:
+        """Every authorisation the ledger had heard of by end of ``day``."""
+        return tuple(
+            auth_ref
+            for auth_ref in self.references()
+            if self.history(auth_ref)[0].day <= day
+        )
+
     def hold_for(self, auth_ref: str, day: int) -> Money | None:
         """The hold in force for one authorisation at end of ``day``."""
         applicable = [t for t in self.history(auth_ref) if t.day <= day]

@@ -208,3 +208,12 @@ timestamps and recorded that implementation was agent-assisted.
 **2026-09-01 22:27 +0300 — Commit 18: trimmed the ARCHITECTURE.md preamble.** Removed the subtitle describing
 the file's role in the submission. It addressed a reader of the assessment rather than a
 reader of the system, and the document stands on its own without it.
+
+**2026-09-01 22:41 +0300 — Commit 19: per-day authorisation states.** Audited the repository against the brief
+line by line and found one real gap: the brief asks the script to print authorisation states
+per day, and the report was printing transitions, so Day 3 said nothing about Auth-A while it
+held 200.00 of the customer's available balance and Day 6 said nothing at all. Put the
+as-at-a-day fold on `AuthorizationLog` (`state_on`, `known_on`) rather than in the
+reporter, beside the existing `hold_for`, so the reporter still computes nothing the ledger
+cannot answer for itself. Kept the transition lines underneath, so the report shows both what
+was true and what changed.

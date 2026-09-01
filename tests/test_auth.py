@@ -183,6 +183,45 @@ def test_state_is_derived_by_folding_not_stored():
     assert [str(t.hold) for t in history] == ["200.00 AED", "0.00 AED"]
 
 
+def test_state_on_reads_the_state_as_at_a_given_day():
+    """A per-day report has to say what was true then, not only what is true now."""
+    journal, log = funded_journal(), AuthorizationLog()
+    request_authorization(journal, log, auth_a())
+    decide_settlement(
+        journal,
+        log,
+        Settlement(
+            event_id="E5", booking_day=4, value_date=4, account_id="ACC-001",
+            auth_ref="Auth-A", amount=aed("185.00"),
+        ),
+    )
+
+    assert log.state_on("Auth-A", 1) is None  # not yet requested
+    assert log.state_on("Auth-A", 2) is AuthState.APPROVED
+    assert log.state_on("Auth-A", 3) is AuthState.APPROVED  # a day it did not change
+    assert log.state_on("Auth-A", 4) is AuthState.SETTLED
+    assert log.state_on("Auth-A", 6) is AuthState.SETTLED
+    # ... while state_of folds the whole history and only ever sees the end.
+    assert log.state_of("Auth-A") is AuthState.SETTLED
+
+
+def test_known_on_lists_only_authorisations_heard_of_by_that_day():
+    journal, log = funded_journal("1000.00"), AuthorizationLog()
+    request_authorization(journal, log, auth_a())
+    request_authorization(
+        journal,
+        log,
+        Authorization(
+            event_id="E8", booking_day=5, value_date=5, account_id="ACC-001",
+            auth_ref="Auth-B", amount=aed("90.00"),
+        ),
+    )
+
+    assert log.known_on(1) == ()
+    assert log.known_on(2) == ("Auth-A",)
+    assert log.known_on(5) == ("Auth-A", "Auth-B")
+
+
 def test_expiry_releases_an_unsettled_hold():
     journal, log = funded_journal("1000.00"), AuthorizationLog()
     request_authorization(journal, log, auth_a())

@@ -270,6 +270,19 @@ def test_replay_is_deterministic():
         assert [str(entry) for entry in replay().journal] == first
 
 
+def test_the_report_prints_authorisation_state_on_days_nothing_changed(final):
+    """The brief asks for authorisation states per day, not just transitions."""
+    output = render(final)
+    day_three = output.split("Day 3\n")[1].split("Day 4\n")[0]
+    # Auth-A neither opened nor closed on Day 3, but it held 200.00 all day.
+    assert "Auth-A (ACC-001)  APPROVED    hold     200.00 AED" in day_three
+    assert "authorisation changes today" not in day_three
+
+    day_six = output.split("Day 6\n")[1]
+    assert "Auth-A (ACC-001)  SETTLED" in day_six
+    assert "Auth-B (ACC-001)  DECLINED" in day_six
+
+
 def test_the_report_renders(final):
     output = render(final)
     for expected in (

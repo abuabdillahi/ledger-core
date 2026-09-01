@@ -4,6 +4,12 @@ Everything printed here is read back out of the journal, the auth log and the
 decision log. The reporter computes nothing that the ledger does not already
 know how to answer.
 
+Authorisation state is shown for every day an authorisation is live, not only
+on the days it changes: the brief asks for authorisation states per day, and a
+hold suppressing available balance on a quiet day is exactly the thing a
+per-day report exists to make visible. The transitions that caused a state are
+listed underneath, on the day they happened.
+
 Two reporting choices are deliberate. Day 6's closing balance is shown both
 before and after the interest capitalisation credit, separately, so neither
 question has to be inferred (AMBIGUITIES item 13). And where the value and
@@ -98,9 +104,22 @@ def render_days(result: ReplayResult) -> list[str]:
                 lines.append("    fees value-dated to this day:")
                 lines.extend(_entry_line(entry) for entry in fees)
 
+        known = result.auth_log.known_on(day)
+        if known:
+            lines.append("    authorisation states:")
+            for auth_ref in known:
+                account_id = result.auth_log.history(auth_ref)[0].account_id
+                state = result.auth_log.state_on(auth_ref, day)
+                hold = result.auth_log.hold_for(auth_ref, day)
+                assert state is not None and hold is not None
+                lines.append(
+                    f"      {auth_ref} ({account_id})  {str(state):<10}"
+                    f"  hold {str(hold):>14}"
+                )
+
         transitions = [t for t in result.auth_log if t.day == day]
         if transitions:
-            lines.append("    authorisations:")
+            lines.append("    authorisation changes today:")
             lines.extend(f"      {transition}" for transition in transitions)
 
         decisions = [d for d in result.journal.decisions if d.booking_day == day]
