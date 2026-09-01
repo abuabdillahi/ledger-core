@@ -93,3 +93,9 @@ question: `auth.py` will own the decision *logic*, the journal owns the *record*
 logs draw on one sequence counter so a decision's position relative to surrounding postings
 is unambiguous. Noted in the module docstring that production would normally split these
 into an upstream event store and a downstream postings-only ledger.
+
+**2026-09-01 19:59 +0300 — Commit 6: balance projections.** Both bases implemented. Kept `projections` free of
+any dependency on `auth` by declaring the hold source as a structural `Protocol` — balances
+are arithmetic over the journal and have no business knowing what an authorisation is. Added
+one `exclude` predicate to `balance`, for the single caller that needs a basis excluding a
+day's own fee.
