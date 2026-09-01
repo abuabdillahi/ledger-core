@@ -107,3 +107,12 @@ states the actual claim — every day from the value date onwards moves by the f
 Day 1 does not move at all. Also added a test that demonstrates the AMBIGUITIES item 15 bug
 directly: a reversal value-dated to its booking day is right on Day 6 and wrong on every
 day before it.
+
+**2026-09-01 20:02 +0300 — Commit 8: hold register and authorisation lifecycle.** Auth state is folded from a
+transition log rather than stored, so "what state is Auth-A in" always comes with its own
+audit trail. `AuthorizationLog` satisfies the `HoldRegistry` protocol, so holds reach the
+available-balance calculation without balances depending on the authorisation module.
+Three states in the enum (PARTIALLY_SETTLED, RELEASED, VOIDED) have no producing code path
+in this scope because no event represents incremental settlement, merchant release or void;
+they are documented as modelled-but-unreachable rather than quietly dropped, and Part 2
+covers what each would mean.
