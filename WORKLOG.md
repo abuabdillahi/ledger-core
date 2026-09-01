@@ -99,3 +99,11 @@ any dependency on `auth` by declaring the hold source as a structural `Protocol`
 are arithmetic over the journal and have no business knowing what an authorisation is. Added
 one `exclude` predicate to `balance`, for the single caller that needs a basis excluding a
 day's own fee.
+
+**2026-09-01 20:00 +0300 — Commit 7: back-value cascade test, before fees exist.** Wrote the cascade proof
+against the projections alone. First attempt at one assertion was an unreadable arithmetic
+expression that also happened to be wrong; replaced it with a before/after comparison that
+states the actual claim — every day from the value date onwards moves by the full 620.00,
+Day 1 does not move at all. Also added a test that demonstrates the AMBIGUITIES item 15 bug
+directly: a reversal value-dated to its booking day is right on Day 6 and wrong on every
+day before it.
