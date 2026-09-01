@@ -152,3 +152,9 @@ rather than retrospectively, and asserted in the scenario test rather than hidde
 replaced a scenario assertion that was technically passing while asserting almost nothing
 (`(day, after) != (day, before) or day == 1 or day == 3`) with the claim it was meant to
 make.
+
+**2026-09-01 20:24 +0300 — Commit 13: the annotated failing test.** Marked `xfail(strict=True)` rather than
+plain xfail, so that if the implementation ever switches to the alternative policy the suite
+reports an unexpected pass instead of quietly going green. Verified with `--runxfail` that
+it fails on the intended assertion (three fee reversals exist where the alternative policy
+expects none) rather than incidentally somewhere else.
