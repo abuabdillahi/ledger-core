@@ -158,3 +158,10 @@ plain xfail, so that if the implementation ever switches to the alternative poli
 reports an unexpected pass instead of quietly going green. Verified with `--runxfail` that
 it fails on the intended assertion (three fee reversals exist where the alternative policy
 expects none) rather than incidentally somewhere else.
+
+**2026-09-01 20:27 +0300 — Commit 14: Part 2 architecture and trade-offs document.** Grounded the scale section
+in the actual implementation rather than in generalities: the bottleneck is the fee
+reconciler calling an O(n) balance projection once per day per account after every financial
+event, which is quadratic in stream length, and it bites long before memory does. Wrote the
+snapshot proposal with its value-date invalidation rule, since a snapshot that is stale and
+does not know it turns an expensive correct answer into a fast wrong one.
