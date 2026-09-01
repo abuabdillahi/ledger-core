@@ -65,7 +65,7 @@ def test_half_even_rounding():
 def test_half_up_differs_only_on_exact_ties():
     assert Money.from_major("3.3325", "BHD", RoundingMode.HALF_UP).minor_units == 3333
     # ... and agrees everywhere else, which is why the mode does not bind on
-    # this dataset (AMBIGUITIES item 17).
+    # this dataset (AMBIGUITIES item 16).
     daily_accrual = Fraction(465) * Fraction(4, 10000)  # exactly 0.186
     assert round_to_precision(daily_accrual, "AED", RoundingMode.HALF_EVEN) == Money(
         19, "AED"
@@ -89,7 +89,7 @@ def test_half_up_ties_go_away_from_zero():
 
 def test_exact_rational_input_is_not_pre_rounded():
     # 0.04% of 465.00 is exactly 0.186 and must reach the rounding point
-    # undisturbed (AMBIGUITIES item 16).
+    # undisturbed (AMBIGUITIES item 15).
     exact = Money.from_major("465.00", "AED").as_major() * Fraction(4, 10000)
     assert exact == Fraction(186, 1000)
 
@@ -104,7 +104,7 @@ def test_negative_amounts_format_and_compare():
 
 
 def test_zero_is_neither_positive_nor_negative():
-    # Strict inequality at the overdraft threshold (AMBIGUITIES item 12).
+    # Strict inequality at the overdraft threshold: zero is not an overdraft.
     flat = Money.zero("AED")
     assert not flat.is_negative
     assert not flat.is_positive

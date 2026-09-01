@@ -163,7 +163,7 @@ def handle(
                     booking_day=event.booking_day,
                     # The original's value date, not the booking day: a
                     # compensating entry only nets to zero on every day's
-                    # balance if it shares it (AMBIGUITIES item 15).
+                    # balance if it shares it (AMBIGUITIES item 14).
                     value_date=event.value_date,
                     account_id=event.account_id,
                     direction=original.opposite_direction(),

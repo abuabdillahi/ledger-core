@@ -197,10 +197,13 @@ def decide_settlement(
 
     Returns True if the caller should append a debit for ``event.amount``.
 
-    An unmatched settlement is refused and the refusal is recorded durably. That
-    is correct for this system as scoped and wrong for a real card issuer, where
-    forced posts and late presentments arrive without a matching authorisation
-    routinely; see REJECTED.md criterion 4.
+    An unmatched settlement is refused and the refusal is recorded durably.
+    That satisfies the brief's acceptance criterion 4 ("a settlement referencing
+    an authorisation not present in the ledger is rejected and funds do not
+    move") and is correct for this system as scoped -- but it is wrong for a
+    real card issuer, where forced posts and late presentments arrive without a
+    matching authorisation routinely and scheme rules oblige the issuer to
+    honour them with chargeback as the recourse.
     """
     if not log.knows(event.auth_ref):
         journal.record_decision(

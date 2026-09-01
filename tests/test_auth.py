@@ -55,7 +55,9 @@ def test_auth_a_is_approved():
 
 
 def test_a_hold_reduces_available_balance_but_not_ledger_balance():
-    """Acceptance criterion 5's consequent, which is true by construction."""
+    """The brief's acceptance criterion 5 says a hold reduces available balance
+    but not ledger balance. True by construction in this model: holds append no
+    entry, and available balance is ledger balance minus active holds."""
     journal, log = funded_journal(), AuthorizationLog()
     request_authorization(journal, log, auth_a())
 

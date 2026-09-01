@@ -1,12 +1,7 @@
 # Ambiguities
 
 Every item below is a question the brief does not settle, or settles only by implication.
-Each records the ambiguity, the options available, the choice made, and — the part that
-matters — what would be different had the other option been taken.
-
-Items are numbered and stable. NUMBERS.md cross-references them rather than restating them:
-one decision, one home. A *policy* choice (which of two behaviours) lives here; a *magnitude*
-choice (why that value and not half it) lives in NUMBERS.md.
+Each records the ambiguity, the options available, the choice made, and what would be different had the other option been taken.
 
 ---
 
@@ -17,9 +12,10 @@ back-valued entry changed, and assess fees on any that now close negative. (b) F
 the entry affects balances retroactively for reporting, but fees are assessed only from the
 booking day onward, because Day 2 is closed and a closed day is not reopened.
 
-**Chosen: retroactive.** Criterion 1's framing — "the Day 2 closing balance, evaluated at end
-of Day 5, before any fee is assessed" — presupposes that a fee is about to be assessed
-against a restated Day 2, which only makes sense retroactively.
+**Chosen: retroactive.** The brief's own framing of acceptance criterion 1 — "the Day 2
+closing balance, evaluated at end of Day 5, before any fee is assessed" — presupposes that
+a fee is about to be assessed against a restated Day 2, which only makes sense
+retroactively.
 
 **Consequence of the alternative.** E7 would produce one fee, not three. Only Day 5, the
 booking day, closes negative at the time of booking, so a forward-only policy assesses
@@ -115,7 +111,7 @@ more defensible answer to "what is the true total interest". Its cost is that Da
 accrual of 0.18 is not the rounding of Day 6's exact accrual of 0.186 — an unexplainable
 line in the schedule, differing from the identical Days 4 and 5 for no reason visible in the
 data. The chosen policy trades one fils of accuracy for an explainable schedule. Note that
-under (b) three days tie at a fractional remainder of .639, so the tie-break rule (item 18)
+under (b) three days tie at a fractional remainder of .639, so the tie-break rule (item 17)
 determines which two of Days 4, 5 and 6 round up.
 
 ## 7. Booking chronology conflicts with stream order
@@ -179,7 +175,7 @@ hold is ever created and there is nothing to expire. The model nonetheless defin
 expiry path for an approved-but-unsettled authorisation, because omitting it would leave a
 hold suppressing available balance indefinitely with no code path able to release it. Expiry
 is evaluated by the day-advance hook rather than by any inbound event; see NUMBERS.md for
-the expiry window constant and why it does not bind here.
+the expiry window constant.
 
 ## 11. The overdraft fee is denominated in AED, but ACC-002 is BHD
 
@@ -210,18 +206,7 @@ timestamp, and a policy for which day's rate applies to a *back-valued* fee — 
 value date, or on the booking day? Nothing in this scope can answer that, and inventing an
 answer would be worse than declining the approach.
 
-## 12. Is a closing balance of exactly zero negative?
-
-**Chosen: no.** Strict inequality: a fee is assessed when the closing balance is strictly
-below zero. A zero balance is not an overdraft, and no bank charges for one.
-
-**Consequence of the alternative.** An account that closes exactly flat — the common result
-of a customer emptying their account deliberately — would be charged 25.00 and pushed into a
-genuine overdraft by the fee itself. Note that Day 3's closing balance of 5.00 sits
-uncomfortably close to this boundary; under a larger fee (item 3) the boundary condition
-would be exercised rather than merely defined.
-
-## 13. Does the interest capitalisation credit itself accrue, or trigger fee reassessment?
+## 12. Does the interest capitalisation credit itself accrue, or trigger fee reassessment?
 
 **Chosen: no to both.** It is posted after the final accrual has been computed, so it is not
 in any day's accrual basis; and being a credit, it cannot make a balance negative, so it
@@ -234,7 +219,7 @@ pointless work, and pointless work in a ledger is a future bug: someone eventual
 the capitalisation entry to a debit-capable type and the harmless pass starts assessing
 fees.
 
-## 14. Is the reported Day 6 closing balance before or after capitalisation?
+## 13. Is the reported Day 6 closing balance before or after capitalisation?
 
 **Chosen: report both**, separately — the pre-capitalisation closing balance and the
 capitalisation credit as its own line, with the post-capitalisation figure derivable from
@@ -245,7 +230,7 @@ balance that does not include a credit value-dated to Day 6 (confusing) and one 
 in a credit whose derivation is invisible (unauditable). Reporting both costs one line and
 answers both questions.
 
-## 15. What value date does a fee reversal carry?
+## 14. What value date does a fee reversal carry?
 
 **Options.** (a) The value date of the original fee it reverses. (b) The day the reversal is
 booked.
@@ -262,7 +247,7 @@ date Day 2 rather than Day 6. Booking day still records when the reversal actual
 so the posting-basis timeline remains intact and an auditor can see that the correction was
 made on Day 6.
 
-## 16. Where is the rounding point?
+## 15. Where is the rounding point?
 
 **Options.** (a) Carry exact rational arithmetic throughout and round exactly once, at the
 moment a ledger entry is created. (b) Round at each intermediate step.
@@ -275,7 +260,7 @@ any further computation and a 0.004 error is baked in, then compounds across six
 is a binary choice — round once or round often — rather than a tunable magnitude, which is
 why it lives here and not in NUMBERS.md.
 
-## 17. Which rounding mode?
+## 16. Which rounding mode?
 
 **Chosen: half-even (banker's rounding).** It avoids the upward bias that half-up accumulates
 over many operations, which is the conventional choice in financial systems.
@@ -287,7 +272,7 @@ byte-identical output. It is documented because the choice is real and had to be
 explicitly — `round_to_precision` takes a named mode rather than defaulting silently — not
 because it changes anything here.
 
-## 18. How are ties broken in largest-remainder allocation?
+## 17. How are ties broken in largest-remainder allocation?
 
 **Chosen: lowest index wins.**
 
@@ -300,10 +285,9 @@ first element receiving every rounding benefit forever, at the cost of carrying 
 must itself be persisted and replayed. What matters is not which rule but that the rule is
 *deterministic*. A non-deterministic tie-break — iterating an unordered set, a
 hash-seed-dependent sort — would make replaying the log produce different balances than the
-original run. That failure mode is silent, survives every unit test, and surfaces months
-later as an unexplainable reconciliation break.
+original run.
 
-## 19. Is fee assessment triggered by events or by the passage of time?
+## 18. Is fee assessment triggered by events or by the passage of time?
 
 *Surfaced during implementation, while writing the truncated replay that makes the
 post-E7 intermediate state testable. Added in the commit that encountered it.*

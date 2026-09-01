@@ -9,7 +9,7 @@ The contract that matters is not fairness but *determinism*: the same inputs
 must always produce the same output, in the same order, on any machine and any
 interpreter run. Replaying a log through a non-deterministic allocator produces
 different balances than the original run, silently. Ties therefore go to the
-lowest index (AMBIGUITIES item 18).
+lowest index (AMBIGUITIES item 17).
 """
 
 from __future__ import annotations

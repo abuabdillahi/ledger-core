@@ -6,7 +6,7 @@ know how to answer.
 
 Two reporting choices are deliberate. Day 6's closing balance is shown both
 before and after the interest capitalisation credit, separately, so neither
-question has to be inferred (AMBIGUITIES item 14). And where the value and
+question has to be inferred (AMBIGUITIES item 13). And where the value and
 posting bases disagree, both are shown, because "what the balance was" and
 "what we believed at the time" are different questions with different right
 answers.

@@ -179,9 +179,5 @@ exception handling, and use chargeback as the recourse.
 - **No authorisation expiry inside the window.** The mechanism exists and is tested, but the
   six-day window and the seven-day expiry mean it is never exercised by this data. Untested
   in anger is untested.
-- **No Shari'ah-specific product structures.** No murabaha or ijara posting models, no
-  purification account for non-compliant income, no profit-pool allocation across depositors.
-  These are not additions to a conventional ledger; they change what a posting *means*, and
-  retrofitting them is substantially harder than designing for them.
 - **No snapshotting.** Query cost grows without bound, as set out in section 1. It is the
   first thing to add, and the section above says why it is also the cheapest.

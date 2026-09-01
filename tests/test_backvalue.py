@@ -74,7 +74,7 @@ def test_back_valued_debit_rewrites_every_later_day(journal_before_e7):
 
     assert closing(journal) == {
         1: "250.00 AED",
-        2: "-370.00 AED",  # acceptance criterion 1, and it is correct
+        2: "-370.00 AED",  # matches the brief's acceptance criterion 1
         3: "30.00 AED",    # 5.00 once the Day 2 fee joins the fold
         4: "-155.00 AED",
         5: "-155.00 AED",
@@ -116,7 +116,7 @@ def test_reversal_restores_every_day_not_just_the_last(journal_before_e7):
     post(journal, booking_day=5, value_date=2, direction=Direction.DEBIT,
          amount=aed("620.00"), entry_type=EntryType.DEBIT, origin_ref="E7")
     # E9: booked Day 6, value-dated Day 2 -- the original's value date, not the
-    # booking day (AMBIGUITIES item 15).
+    # booking day (AMBIGUITIES item 14).
     post(journal, booking_day=6, value_date=2, direction=Direction.CREDIT,
          amount=aed("620.00"), entry_type=EntryType.REVERSAL, origin_ref="E7")
 
@@ -131,7 +131,7 @@ def test_reversal_restores_every_day_not_just_the_last(journal_before_e7):
 
 
 def test_a_reversal_value_dated_to_its_booking_day_would_be_wrong(journal_before_e7):
-    """The bug AMBIGUITIES item 15 exists to prevent, demonstrated."""
+    """The bug AMBIGUITIES item 14 exists to prevent, demonstrated."""
     journal = journal_before_e7
     post(journal, booking_day=5, value_date=2, direction=Direction.DEBIT,
          amount=aed("620.00"), entry_type=EntryType.DEBIT, origin_ref="E7")

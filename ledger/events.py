@@ -86,7 +86,7 @@ class Reversal:
 
     The value date is the *original's* value date, not the day the reversal is
     booked, or the correction would only apply from the booking day forward
-    (AMBIGUITIES item 15).
+    (AMBIGUITIES item 14).
     """
 
     event_id: str

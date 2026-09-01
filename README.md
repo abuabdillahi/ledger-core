@@ -93,8 +93,9 @@ and E9's three reversals come out of one mechanism rather than two.
 
 ## The documents
 
-- [REJECTED.md](REJECTED.md) — the eight acceptance criteria, each evaluated independently
-- [AMBIGUITIES.md](AMBIGUITIES.md) — nineteen things the brief does not settle, and what was
+- [REJECTED.md](REJECTED.md) — the four supplied acceptance criteria that do not hold, and
+  why (the other four were accepted; all eight were evaluated independently)
+- [AMBIGUITIES.md](AMBIGUITIES.md) — eighteen things the brief does not settle, and what was
   chosen in each case
 - [NUMBERS.md](NUMBERS.md) — constants, split into given and chosen
 - [ARCHITECTURE.md](ARCHITECTURE.md) — append-only at scale, value dating in production, the

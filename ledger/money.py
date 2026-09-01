@@ -10,7 +10,7 @@ which is exact. ``float`` is rejected at construction rather than tolerated.
 *One rounding point.* This is the only module permitted to round, via
 :func:`round_to_precision`, which takes an explicit named mode. Everything
 upstream carries exact rationals and rounds exactly once, at the moment a
-ledger entry is created (AMBIGUITIES item 16).
+ledger entry is created (AMBIGUITIES item 15).
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ class UnknownCurrency(Exception):
 class RoundingMode(StrEnum):
     """Named rounding modes. There is no default; callers must choose.
 
-    Half-even is the house choice (AMBIGUITIES item 17). Half-up is present so
+    Half-even is the house choice (AMBIGUITIES item 16). Half-up is present so
     that the claim "the mode does not change the output on this dataset" is
     testable rather than asserted.
     """

@@ -8,7 +8,7 @@ negative balances that existed between E7 and E9 never earn or lose anything
 The rate is an exact rational, ``Fraction(4, 10000)``, and each day's accrual is
 computed exactly and rounded once. 465.00 x 0.04% is exactly 0.186; rounding
 that to 0.19 and carrying the rounded figure forward would bake in 0.004 per day
-and compound it (AMBIGUITIES item 16).
+and compound it (AMBIGUITIES item 15).
 
 The capitalised total is *defined* as the sum of the rounded daily accruals,
 which satisfies the brief's rule by construction rather than by a reconciliation
@@ -81,7 +81,7 @@ def capitalise(
     The credit is value-dated to the last day of the window and posted *after*
     the accrual is computed, so it does not accrue on itself. Being a credit it
     cannot make a balance negative, so it warrants no fee reassessment
-    (AMBIGUITIES item 13).
+    (AMBIGUITIES item 12).
     """
     currency = currency_of(account_id)
     accruals = accrue(journal, account_id, days)

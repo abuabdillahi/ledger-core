@@ -1,14 +1,5 @@
 # Numbers
 
-Constants only. The test for inclusion is whether *"why that value and not half it?"* has a
-meaningful answer. If the alternative is a different **magnitude**, it belongs here. If the
-alternative is a different **option**, it is a policy choice and belongs in AMBIGUITIES.md.
-
-Rounding mode, tie-break rule, interest basis, residual hold release and replay ordering are
-all policy choices. They are not in this file. Where a constant depends on a policy choice,
-the AMBIGUITIES item is cross-referenced by number and never restated: one decision, one
-home.
-
 ---
 
 ## Given
@@ -25,7 +16,7 @@ to us and what we decided is legible.
 | BHD precision | 3 decimal places | Brief |
 | Opening balances | 0.00 (ACC-001), 0.000 (ACC-002) | Brief |
 
-The daily rate is held as an exact rational, not as 0.0004. See AMBIGUITIES item 16 for why
+The daily rate is held as an exact rational, not as 0.0004. See AMBIGUITIES item 15 for why
 the representation is not a free choice.
 
 ---
@@ -76,8 +67,8 @@ roughly double the AED fee in real terms and 1.250 roughly half. Neither is defe
 
 ### Overdraft threshold: **0.00, exclusive**
 
-**Why.** A fee is assessed when the closing balance is *strictly* below this figure. See
-AMBIGUITIES item 12 for the zero-balance boundary.
+**Why.** A fee is assessed when the closing balance is *strictly* below this figure. A
+zero balance is not an overdraft.
 
 **Raised to any positive value.** Fees would be assessed on solvent accounts — a bank
 charging an overdraft fee to a customer who is not overdrawn.

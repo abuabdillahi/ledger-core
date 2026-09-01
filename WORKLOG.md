@@ -1,16 +1,20 @@
 # Worklog
 
-Timestamps are real. Pre-implementation entries were performed before the repository
-existed and are marked `[TIME TBC]` for the author to fill in from their own notes; every
-entry from the first commit onwards carries an actual clock time.
+Pre-implementation entries were performed before the repository
+existed and the timestamps for these events may not be 100% accurate. In general, they 
+represent the time that an activity was completed, not when it was started.
+Every entry from the first commit onwards carries an actual clock time.
 
 Times are as reported by the machine the work was done on (UTC+03).
+
+Implementation was agent-assisted against a specification I wrote; the analysis,
+architecture and all documented decisions are my own.
 
 ---
 
 ## Pre-implementation
 
-**[TIME TBC] — Background research.** Read up on Mal, the role, and the operating
+**2026-08-28 21:49 +0300 — Background research.** Read up on Mal, the role, and the operating
 environment: CBUAE as regulator, the mandatory application of AAOIFI Shari'ah standards for
 Islamic financial institutions in the UAE, the Internal Shari'ah Supervision Committee
 governance model, and AML record-keeping obligations — five-year retention, with the
@@ -19,40 +23,40 @@ transactions*. That last requirement is the one that shapes the architecture: it
 argument for an append-only journal on regulatory grounds, independent of any engineering
 preference.
 
-**[TIME TBC] — Core banking ledger fundamentals.** Double-entry invariants; money
+**2026-08-28 22:13 +0300 — Core banking ledger fundamentals.** Double-entry invariants; money
 representation in integer minor units and why floating point is disqualifying; concurrency
 models for ledgers; idempotency and duplicate-event handling; write-ahead durability;
 sequencing and total order; reversal semantics (compensating entry versus deletion).
 
-**[TIME TBC] — Domain concepts.** Chart of accounts and the sub-ledger / general-ledger
+**2026-08-29 19:55 +0300 — Domain concepts.** Chart of accounts and the sub-ledger / general-ledger
 boundary; posting versus settlement; nostro reconciliation; value dating; and the
 distinction between a core banking ledger and a payment orchestrator — the latter moves
 money, the former is the book of record, and conflating them is a common architectural
 error.
 
-**[TIME TBC] — Islamic finance primitives.** Murabaha, ijara, wakala, mudaraba and qard
+**2026-08-29 19:55 +0300 — Islamic finance primitives.** Murabaha, ijara, wakala, mudaraba and qard
 hasan, and how each posts differently. Relevant here mainly through mudaraba: under a
 profit-sharing deposit structure, value-dated balances directly determine each depositor's
 share of the pool, so a value-date error is a Shari'ah compliance failure and not merely an
 accounting one. Noted for the Part 2 document.
 
-**[TIME TBC] — Hand calculation.** Computed the full day-by-day balance table on paper
+**2026-09-01 11:58 +0300 — Hand calculation.** Computed the full day-by-day balance table on paper
 before writing any code, including the E7 back-value cascade and the three overdraft fees it
 triggers. Doing this first is what made criterion 2 obviously wrong rather than arguably
 wrong.
 
-**[TIME TBC] — Recomputation after an error.** Found an error in the initial treatment of
+**2026-09-01 12:46 +0300 — Recomputation after an error.** Found an error in the initial treatment of
 E6 (had provisionally posted the unmatched settlement before concluding it must be
 rejected), recomputed the whole table independently, and arrived at the verified figures.
 Recorded here rather than quietly corrected, because the first pass being wrong is the
 normal case and the log should say so.
 
-**[TIME TBC] — Acceptance criteria.** Evaluated all eight individually against the hand
+**2026-09-01 13:50 +0300 — Acceptance criteria.** Evaluated all eight individually against the hand
 calculation, deliberately not against each other. Identified criteria 2, 6, 7 and 8 as
 incorrect, criterion 5 as sound but unreachable, and criterion 4 as correct-as-scoped with
 two production qualifications.
 
-**[TIME TBC] — Architecture.** Settled on: the journal is the only state; every other value
+**2026-09-01 19:39 +0300 — Architecture.** Settled on: the journal is the only state; every other value
 (balances, available balance, fee status, authorisation state) is a pure function of it; fee
 assessment is a reconciler computing desired-versus-actual rather than an assessor with
 separate assess and unwind paths. The back-value cascade then falls out for free — appending
@@ -72,7 +76,7 @@ virtualenv created with pytest as the sole (development-only) dependency.
 units with the currency attached; `float` is refused at construction, at the major-unit
 constructor and at the rounding entry point, so "no floating point" is enforced by the type
 rather than by grep. Rounding lives in this module alone and takes an explicit named mode.
-Added a half-up mode alongside half-even purely so that the AMBIGUITIES item 17 claim — that
+Added a half-up mode alongside half-even purely so that the AMBIGUITIES item 16 claim — that
 the mode does not change the output on this dataset — is a passing test rather than a
 sentence.
 
@@ -104,7 +108,7 @@ day's own fee.
 against the projections alone. First attempt at one assertion was an unreadable arithmetic
 expression that also happened to be wrong; replaced it with a before/after comparison that
 states the actual claim — every day from the value date onwards moves by the full 620.00,
-Day 1 does not move at all. Also added a test that demonstrates the AMBIGUITIES item 15 bug
+Day 1 does not move at all. Also added a test that demonstrates the AMBIGUITIES item 14 bug
 directly: a reversal value-dated to its booking day is right on Day 6 and wrong on every
 day before it.
 
@@ -147,7 +151,7 @@ is which.
 without adjustment. Writing the truncated replay for the post-E7 intermediate state surfaced
 a genuine new ambiguity: fee assessment here is event-triggered, so a day that closes
 negative with no later event is never assessed — invisible on the full stream, visible the
-moment you stop after E7 and look at Day 6. Added as AMBIGUITIES item 19 in this commit
+moment you stop after E7 and look at Day 6. Added as AMBIGUITIES item 18 in this commit
 rather than retrospectively, and asserted in the scenario test rather than hidden. Also
 replaced a scenario assertion that was technically passing while asserting almost nothing
 (`(day, after) != (day, before) or day == 1 or day == 3`) with the claim it was meant to
@@ -186,3 +190,17 @@ anyway. Then tested the claim directly by temporarily adding a seventh `EntryTyp
 mypy failed at the `assert_never` arm in the fee reconciler, as intended. Added mypy to the
 dev extras and recorded the check in the README, since a claim about type-checking that has
 never been type-checked is not worth much.
+
+**2026-09-01 22:24 +0300 — Commit 17: documentation review pass.** Reread the documents as a set rather than
+one at a time, which surfaced two things. REJECTED.md was carrying full write-ups of the
+four criteria that hold, and those were restating conclusions the code already makes; scoped
+the document to the four that do not hold, and moved the substance that was worth keeping to
+where the behaviour lives — the unmatched-settlement caveat into `decide_settlement`'s
+docstring, criterion 5's claim into the test that proves it. And AMBIGUITIES item 12, on
+whether a zero closing balance is negative, was not really a policy choice with two live
+options: it is the exclusivity of the overdraft threshold, which NUMBERS.md already
+documents as a constant. Folded it there and renumbered items 13–19 to 12–18, moving every
+cross-reference in the package, the tests and the other documents with them. Also started
+attributing acceptance criteria to the brief explicitly, since the repository keeps its own
+numbered lists and the two read confusingly side by side. Filled in the real pre-implementation
+timestamps and recorded that implementation was agent-assisted.

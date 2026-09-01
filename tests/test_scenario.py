@@ -109,7 +109,7 @@ def test_closing_balances_include_each_days_own_fee(after_e7):
 
 
 def test_fee_assessment_is_event_triggered_not_time_triggered(after_e7):
-    """AMBIGUITIES item 19, surfaced by this truncated replay.
+    """AMBIGUITIES item 18, surfaced by this truncated replay.
 
     Day 6 closes at -230.00 here and carries no fee, because no event after E7
     ever prompts a reconciliation covering it. On the full ten-event stream the

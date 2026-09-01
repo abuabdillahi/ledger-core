@@ -36,7 +36,7 @@ OVERDRAFT_FEE_TARIFF: dict[str, Money] = {
 }
 
 #: A fee is assessed when the closing balance is *strictly* below this figure.
-#: Zero is not an overdraft (AMBIGUITIES item 12).
+#: Zero is not an overdraft.
 OVERDRAFT_THRESHOLD_MINOR_UNITS = 0
 
 
@@ -135,7 +135,7 @@ def reconcile(journal: Journal, account_id: str, today: int) -> list[Entry]:
         elif standing is not None and not warranted:
             # Reverse what was actually posted, not what the tariff says today.
             # The reversal takes the original's value date, or it would correct
-            # the last day and leave every earlier one adrift (AMBIGUITIES 15).
+            # the last day and leave every earlier one adrift (AMBIGUITIES 14).
             appended.append(
                 journal.append(
                     booking_day=today,

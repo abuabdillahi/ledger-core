@@ -100,7 +100,7 @@ def test_the_capitalisation_credit_does_not_accrue_on_itself():
     journal = acc_001_final()
     result = capitalise(journal, "ACC-001", WINDOW, booking_day=6)
     # Day 6 accrued on 465.00, the pre-capitalisation balance, even though the
-    # journal now closes Day 6 at 466.03 (AMBIGUITIES item 13).
+    # journal now closes Day 6 at 466.03 (AMBIGUITIES item 12).
     assert result.accruals[-1].basis == aed("465.00")
     assert balance(journal, "ACC-001", 6) == aed("466.03")
 
