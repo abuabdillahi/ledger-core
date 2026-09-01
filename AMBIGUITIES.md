@@ -302,3 +302,28 @@ must itself be persisted and replayed. What matters is not which rule but that t
 hash-seed-dependent sort — would make replaying the log produce different balances than the
 original run. That failure mode is silent, survives every unit test, and surfaces months
 later as an unexplainable reconciliation break.
+
+## 19. Is fee assessment triggered by events or by the passage of time?
+
+*Surfaced during implementation, while writing the truncated replay that makes the
+post-E7 intermediate state testable. Added in the commit that encountered it.*
+
+**Options.** (a) Event-triggered: run the fee reconciler after every event that appends
+financial entries. (b) Time-triggered: run it in the day-advance hook, as end-of-day batch
+processing.
+
+**Chosen: (a), event-triggered**, which is what the brief's architecture specifies. The
+day-advance hook is reserved for authorisation expiry, which appends no ledger entry.
+
+**Consequence, and the artefact it leaves.** Under (a) a day that closes negative is only
+assessed when some later event prompts a reconciliation. On the full ten-event stream this
+is invisible — E10 is the last financial event and triggers a reconciliation covering the
+whole window — but it is plainly visible on a truncated replay: stopping after E7 leaves
+Day 6 closing at −230.00 with no fee assessed, because nothing after E7 ever runs the
+reconciler over it. `tests/test_scenario.py` asserts this rather than hiding it.
+
+Option (b) would assess that day, and is what a real core banking system does: overdraft fee
+assessment is archetypal end-of-day batch work, triggered by the clock and by nothing else.
+The two options agree on this event stream and disagree on any stream whose final days are
+quiet. The reconciler itself is basis-driven and would need no change to move; only its call
+site would.

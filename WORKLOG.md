@@ -142,3 +142,13 @@ not support. Noted in its docstring that the signature should change deliberatel
 ever stops being true. The reporter surfaced something worth keeping — on Day 5 the value
 basis reads 465.00 and the posting basis −230.00, so the report prints both and says which
 is which.
+
+**2026-09-01 20:24 +0300 — Commit 12: full scenario test.** Every figure in section 4 of the brief reproduces
+without adjustment. Writing the truncated replay for the post-E7 intermediate state surfaced
+a genuine new ambiguity: fee assessment here is event-triggered, so a day that closes
+negative with no later event is never assessed — invisible on the full stream, visible the
+moment you stop after E7 and look at Day 6. Added as AMBIGUITIES item 19 in this commit
+rather than retrospectively, and asserted in the scenario test rather than hidden. Also
+replaced a scenario assertion that was technically passing while asserting almost nothing
+(`(day, after) != (day, before) or day == 1 or day == 3`) with the claim it was meant to
+make.
