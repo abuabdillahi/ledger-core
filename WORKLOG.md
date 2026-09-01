@@ -75,3 +75,9 @@ rather than by grep. Rounding lives in this module alone and takes an explicit n
 Added a half-up mode alongside half-even purely so that the AMBIGUITIES item 17 claim — that
 the mode does not change the output on this dataset — is a passing test rather than a
 sentence.
+
+**2026-09-01 19:57 +0300 — Commit 3: largest-remainder allocator.** One implementation, two callers (the BHD
+instalment split and the interest allocation). Confirmed by test that the alternative
+interest allocation from AMBIGUITIES item 6 does produce 0.10 / 0.10 / 0.26 / 0.19 / 0.19 /
+0.18, and that the three-way tie at .639 resolves to Days 4 and 5 under lowest-index-wins —
+the alternative is documented from a computed result, not from an assumption.
