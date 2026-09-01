@@ -81,3 +81,9 @@ instalment split and the interest allocation). Confirmed by test that the altern
 interest allocation from AMBIGUITIES item 6 does produce 0.10 / 0.10 / 0.26 / 0.19 / 0.19 /
 0.18, and that the three-way tie at .639 resolves to Days 4 and 5 under lowest-index-wins —
 the alternative is documented from a computed result, not from an assumption.
+
+**2026-09-01 19:58 +0300 — Commit 4: event and entry types.** Kept events and entries as separate types.
+Decided that `Reversal` should carry no amount and instead reverse whatever its referenced
+event actually posted, read back from the journal: a reversal then cannot disagree with the
+thing it reverses, and multi-entry originals (E10-shaped) reverse correctly without special
+handling.
