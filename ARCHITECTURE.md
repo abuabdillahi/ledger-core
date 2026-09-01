@@ -1,7 +1,5 @@
 # Architecture and trade-offs
 
-*Companion to the ledger core. Markdown source for the 2–4 page PDF deliverable.*
-
 ---
 
 ## 1. Append-only at scale

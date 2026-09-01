@@ -204,3 +204,7 @@ cross-reference in the package, the tests and the other documents with them. Als
 attributing acceptance criteria to the brief explicitly, since the repository keeps its own
 numbered lists and the two read confusingly side by side. Filled in the real pre-implementation
 timestamps and recorded that implementation was agent-assisted.
+
+**2026-09-01 22:27 +0300 — Commit 18: trimmed the ARCHITECTURE.md preamble.** Removed the subtitle describing
+the file's role in the submission. It addressed a reader of the assessment rather than a
+reader of the system, and the document stands on its own without it.
