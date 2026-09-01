@@ -176,3 +176,13 @@ answers both at once. Three smaller things were tried and dropped and are listed
 verification checklist: no `float` anywhere outside the guards that reject it, no
 assignment to any entry field outside the two tests asserting that it raises, no delete or
 mutate path in the package, BHD at three decimal places throughout.
+
+**2026-09-01 20:29 +0300 — Commit 16: type-check pass.** Ran mypy over the package to check that the
+exhaustive-dispatch claim in NUMBERS.md is actually true rather than merely intended. It
+found one real problem: the `exclude` predicate in `fees.assessment_basis` was a lambda
+with a default argument capturing the day, which mypy cannot infer against the declared
+`Callable[[Entry], bool]`. Replaced with a named nested function, which reads better
+anyway. Then tested the claim directly by temporarily adding a seventh `EntryType` member:
+mypy failed at the `assert_never` arm in the fee reconciler, as intended. Added mypy to the
+dev extras and recorded the check in the README, since a claim about type-checking that has
+never been type-checked is not worth much.

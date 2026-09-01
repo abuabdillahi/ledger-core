@@ -83,13 +83,12 @@ def standing_fee(journal: Journal, account_id: str, day: int) -> Entry | None:
 
 def assessment_basis(journal: Journal, account_id: str, day: int) -> Money:
     """Closing balance for ``day``, excluding any fee value-dated to ``day``."""
+
+    def is_this_days_own_fee(entry: Entry) -> bool:
+        return is_fee_posting(entry.entry_type) and entry.value_date == day
+
     return balance(
-        journal,
-        account_id,
-        day,
-        Basis.VALUE,
-        exclude=lambda entry, d=day: is_fee_posting(entry.entry_type)
-        and entry.value_date == d,
+        journal, account_id, day, Basis.VALUE, exclude=is_this_days_own_fee
     )
 
 

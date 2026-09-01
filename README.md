@@ -15,9 +15,15 @@ not raised further, because nothing in this design uses 3.12's type parameter sy
 3.13's free-threading, and each version climbed narrows compatibility for no return.
 NUMBERS.md sets this out in full.
 
-`pytest` is a **development dependency only**. It is used to run the test suite and is not
-imported by any module under `ledger/`, so the no-runtime-dependency claim stands: the
-package runs on a bare interpreter.
+`pytest` is a **development dependency only** — as is `mypy`, which is optional and used
+only to check the exhaustiveness claim above. Neither is imported by any module under
+`ledger/`, so the no-runtime-dependency claim stands: the package runs on a bare
+interpreter, and `python3.11 -m ledger.report` works with nothing installed at all.
+
+That the claim holds is checked rather than asserted: adding a seventh member to `EntryType`
+makes `mypy` fail at the `assert_never` arm of the fee reconciler's dispatch, which is the
+one site that classifies entry types, rather than the new type silently defaulting to "not a
+fee" and changing every assessment basis in the system.
 
 Developed and tested against **CPython 3.11.13** on macOS 15 (Darwin 25.3.0).
 
@@ -29,6 +35,12 @@ python3.11 -m venv .venv
 
 .venv/bin/python -m pytest          # the test suite
 .venv/bin/python -m ledger.report   # replay the event stream and print the report
+```
+
+Optionally, to check the exhaustive-dispatch claim below:
+
+```sh
+.venv/bin/pip install mypy && .venv/bin/python -m mypy ledger/
 ```
 
 The suite should report **87 passed, 1 xfailed**. The expected failure is deliberate and is
