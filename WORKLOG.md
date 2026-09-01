@@ -132,3 +132,13 @@ accrues 0.10 / 0.10 / 0.26 / 0.19 / 0.19 / 0.19 for a capitalised 1.03 against a
 Chose to keep zero-accrual days in the accrual list rather than filtering them, so the
 report can show Days 1–4 of ACC-002 accruing nothing on a zero balance — an absent line and
 a zero line are different statements.
+
+**2026-09-01 20:22 +0300 — Commit 11: replay orchestrator and reporter.** Full stream replays to the verified
+figures on the first run: 250 / 250 / 650 / 465 / 465 / 465 pre-capitalisation on ACC-001,
+10.000 on ACC-002, capitalising 1.03 and 0.008. Dropped the `journal` argument from
+`advance_to` that the brief's sketch shows: everything the day-advance hook does moves no
+money, and a parameter that exists only in case it is needed later is a claim the code does
+not support. Noted in its docstring that the signature should change deliberately if that
+ever stops being true. The reporter surfaced something worth keeping — on Day 5 the value
+basis reads 465.00 and the posting basis −230.00, so the report prints both and says which
+is which.
