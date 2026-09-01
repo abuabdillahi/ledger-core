@@ -116,3 +116,12 @@ Three states in the enum (PARTIALLY_SETTLED, RELEASED, VOIDED) have no producing
 in this scope because no event represents incremental settlement, merchant release or void;
 they are documented as modelled-but-unreachable rather than quietly dropped, and Part 2
 covers what each would mean.
+
+**2026-09-01 20:19 +0300 — Commit 9: fee reconciler.** Written as desired-versus-actual rather than as an
+assessor with a separate unwind path, so E7's three fees and E9's three reversals come out
+of the same loop. Wrote and then deleted a test that asserted this structurally by
+inspecting the source for two `journal.append` calls — a cute test that would break on any
+harmless refactor, and the behavioural tests (same call, fees in one situation, reversals in
+the other) already make the point. Replaced the "one pass is enough" comment with a checked
+assertion: after reconciling, a second read-only pass must find nothing to do, so the
+acyclicity claim in AMBIGUITIES item 2 fails loudly if it ever stops holding.
